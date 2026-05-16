@@ -1,0 +1,143 @@
+# ---------------------------------------------------------------
+# BetterLife — root .gitignore
+# Covers .NET (better-life-backend) + Flutter (better_life_app)
+# Per-platform Flutter .gitignore files inside better_life_app/
+# remain authoritative for their folders.
+# ---------------------------------------------------------------
+
+# =========================
+# .NET / C# / ASP.NET Core
+# =========================
+**/bin/
+**/obj/
+**/out/
+**/publish/
+**/PublishProfiles/
+**/*.user
+**/*.suo
+**/*.userprefs
+**/*.rsuser
+**/*.userosscache
+**/*.sln.docstates
+
+# Visual Studio / Rider / VS Code (workspace state)
+.vs/
+.vscode/
+*.swp
+*.swo
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/
+**/.nuget/
+**/project.lock.json
+**/project.fragment.lock.json
+**/artifacts/
+
+# EF Core
+**/Migrations/*.Designer.cs.bak
+
+# Test / coverage
+**/TestResults/
+**/[Cc]overage*/
+**/*.coverage
+**/*.coveragexml
+**/*.trx
+**/.coverlet/
+**/lcov.info
+
+# Build logs / temp
+**/*.log
+**/*.tlog
+**/*.dbmdl
+**/*.dbproj.schemaview
+**/*.tmp
+**/*.tmp_proj
+
+# Rider / JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# =========================
+# Flutter / Dart
+# =========================
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/build/
+**/generated_plugin_registrant.*
+**/*.g.dart.lock
+
+# Drift / build_runner generated outputs (keep source, ignore build cache)
+**/.dart_tool/build/
+
+# Coverage
+**/coverage/
+
+# iOS / macOS (Flutter-managed but extra safety)
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/macos/Pods/
+
+# Android (Flutter-managed but extra safety)
+**/android/.gradle/
+**/android/captures/
+**/android/local.properties
+**/android/key.properties
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+**/*.jks
+**/*.keystore
+
+# =========================
+# Secrets & environment
+# =========================
+*.env
+*.env.local
+*.env.*.local
+.env
+appsettings.Development.local.json
+appsettings.Production.json
+appsettings.Local.json
+secrets.json
+**/secrets/
+
+# Connection strings / certificates
+*.pfx
+*.cer
+*.crt
+*.key
+*.pem
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+**/.docker/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# =========================
+# Editors / misc
+# =========================
+*.bak
+*.orig
+*.rej
+*.tmp
+*~
