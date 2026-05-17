@@ -1,0 +1,32 @@
+name: Deploy Dev
+
+on:
+  push:
+    branches: [dev]
+    paths: [apps/api/**]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./apps/api
+          push: true
+          tags: ghcr.io/roby-dev/better-life/api:dev
+
+      - name: Deploy
+        run: |
+          cd apps/api
+          TAG=dev docker compose -f docker-compose.yml -f docker-compose.dev.yml pull
+          TAG=dev docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
