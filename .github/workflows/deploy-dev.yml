@@ -4,6 +4,7 @@ on:
   push:
     branches: [dev]
     paths: [apps/api/**]
+  workflow_dispatch:
 
 jobs:
   deploy:
