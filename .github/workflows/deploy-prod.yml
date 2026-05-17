@@ -25,6 +25,9 @@ jobs:
           push: true
           tags: ghcr.io/roby-dev/better-life/api:prod
 
+      - name: Stage .env
+        run: cp /srv/betterlife/prod/.env apps/api/.env
+
       - name: Deploy
         run: |
           cd apps/api
