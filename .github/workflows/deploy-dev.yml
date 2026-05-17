@@ -33,6 +33,9 @@ jobs:
         run: |
           printf '%s\n' "$ENV_FILE_CONTENT" > apps/api/.env
           chmod 600 apps/api/.env
+          echo "Line count: $(grep -c '=' apps/api/.env) KEY=VALUE pairs detected"
+          echo "Keys found (values redacted):"
+          cut -d= -f1 apps/api/.env | sed 's/^/  - /'
 
       - name: Deploy
         run: |
