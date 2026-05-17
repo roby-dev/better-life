@@ -241,23 +241,29 @@ Database changes must be represented through migrations. Avoid manual schema dri
 
 ### Deployment
 
-Target deployment:
+Target deployment topology:
 
-- Ubuntu server.
-- Docker installed.
-- API and SQL Server running through Docker Compose.
+- **LAN server** (e.g. `192.168.1.35`) running Docker. Hosts BOTH the API and SQL Server containers.
+- **Developer workstation** runs the API locally via `dotnet run` and connects to the SQL Server already running on the LAN server. NO local SQL Server in Docker on the dev machine.
 - Configuration through `.env`.
 - Cloudflare exposure is planned later and should not be required for local MVP development.
 
-Initial Docker scope:
+Production Docker scope (runs on the LAN server):
 
 ```txt
-docker-compose.yml
-- betterlife-api
-- betterlife-sqlserver
+docker-compose.yml (at apps/api/ or repo root)
+- betterlife-api          (built from apps/api/Dockerfile)
+- betterlife-sqlserver    (mssql/server:2022-latest, with persistent volume)
 ```
 
-The app must support local development without production infrastructure.
+Development:
+
+- The dev machine has NO local SQL Server.
+- `appsettings.Development.json` does NOT contain a connection string.
+- The dev `ConnectionStrings__Default` env var (set in shell or `.env` loaded by an IDE / `dotnet user-secrets`) points to the LAN SQL Server.
+- `.env.example` documents the required variables with placeholder IP `192.168.1.35`.
+
+Convention: any setting that includes credentials or environment-specific URLs (connection strings, JWT secrets, SA passwords) lives in env vars only, never in committed JSON.
 
 ## Backend Architecture Rules
 

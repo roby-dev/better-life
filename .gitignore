@@ -105,6 +105,10 @@
 *.env.local
 *.env.*.local
 .env
+
+# launchSettings.json may contain dev connection strings / JWT secrets per developer.
+# Tracked as launchSettings.json.template instead.
+**/Properties/launchSettings.json
 appsettings.Development.local.json
 appsettings.Production.json
 appsettings.Local.json

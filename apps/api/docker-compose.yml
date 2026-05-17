@@ -1,0 +1,40 @@
+services:
+  betterlife-sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: betterlife-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - betterlife-sqldata:/var/opt/mssql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  betterlife-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: betterlife-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Default: ${CONNECTION_STRING}
+      Jwt__Secret: ${JWT_SECRET}
+      Jwt__Issuer: ${JWT_ISSUER:-betterlife-api}
+      Jwt__Audience: ${JWT_AUDIENCE:-betterlife-mobile}
+    ports:
+      - "8080:8080"
+    depends_on:
+      betterlife-sqlserver:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  betterlife-sqldata:
