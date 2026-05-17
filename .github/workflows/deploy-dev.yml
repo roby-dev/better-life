@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    environment: dev
     steps:
       - uses: actions/checkout@v4
 
@@ -25,8 +26,12 @@ jobs:
           push: true
           tags: ghcr.io/roby-dev/better-life/api:dev
 
-      - name: Stage .env
-        run: cp /srv/betterlife/dev/.env apps/api/.env
+      - name: Stage .env from environment secret
+        env:
+          ENV_FILE_CONTENT: ${{ secrets.ENV_FILE }}
+        run: |
+          printf '%s\n' "$ENV_FILE_CONTENT" > apps/api/.env
+          chmod 600 apps/api/.env
 
       - name: Deploy
         run: |
