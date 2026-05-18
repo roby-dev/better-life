@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:better_life_app/app/router/route_names.dart';
 import 'package:better_life_app/core/error/failure.dart';
 import 'package:better_life_app/core/storage/storage_providers.dart';
 import 'package:better_life_app/core/storage/token_storage.dart';
@@ -9,6 +11,7 @@ import 'package:better_life_app/features/auth/domain/entities/auth_token.dart';
 import 'package:better_life_app/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:better_life_app/features/auth/presentation/providers.dart';
 import 'package:better_life_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:better_life_app/features/auth/presentation/screens/signup_screen.dart';
 import 'package:better_life_app/features/auth/presentation/state/auth_state.dart';
 import 'package:better_life_app/features/auth/presentation/state/auth_notifier.dart';
 
@@ -269,6 +272,57 @@ void main() {
         ),
       );
       expect(textField.obscureText, isFalse);
+    });
+  });
+
+  // ── Footer navigation tests (requires GoRouter) ───────────────────────────
+
+  /// Builds a [MaterialApp.router] with a minimal GoRouter containing only
+  /// the login and register routes, backed by Riverpod provider overrides.
+  Widget buildScreenWithRouter({required _FakeRepo repo}) {
+    final storage = InMemoryTokenStorage();
+    final router = GoRouter(
+      initialLocation: '/login',
+      routes: [
+        GoRoute(
+          path: '/login',
+          name: RouteNames.login,
+          builder: (context, state) => const LoginScreen(),
+        ),
+        GoRoute(
+          path: '/register',
+          name: RouteNames.register,
+          builder: (context, state) => const SignUpScreen(),
+        ),
+      ],
+    );
+    return ProviderScope(
+      overrides: [
+        tokenStorageProvider.overrideWithValue(storage),
+        authRepositoryProvider.overrideWithValue(repo),
+        authNotifierProvider.overrideWith(
+          () => _FakeAuthNotifier(const AuthUnauthenticated()),
+        ),
+      ],
+      child: MaterialApp.router(routerConfig: router),
+    );
+  }
+
+  group('LoginScreen — footer navigation', () {
+    testWidgets('tapping Regístrate navigates to SignUpScreen', (tester) async {
+      await tester.pumpWidget(buildScreenWithRouter(repo: _FakeRepo()));
+      await tester.pump();
+
+      // Scroll down to expose the footer area.
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
+      await tester.pump();
+
+      await tester.tap(find.text('Regístrate'), warnIfMissed: false);
+      await tester.pumpAndSettle();
+
+      // After navigation, SignUpScreen should be visible.
+      expect(find.byType(SignUpScreen), findsOneWidget);
+      expect(find.byType(LoginScreen), findsNothing);
     });
   });
 }

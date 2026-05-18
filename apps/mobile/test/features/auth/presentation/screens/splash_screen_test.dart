@@ -106,14 +106,16 @@ void main() {
       await tester.pump(const Duration(seconds: 3));
     });
 
-    testWidgets('renders tagline text', (tester) async {
+    testWidgets('renders tagline text inside BLAnimatedLogo (exactly once)', (tester) async {
       await tester.pumpWidget(
         _buildSplash(() => _ImmediateAuthNotifier(const AuthUnauthenticated())),
       );
       await tester.pump(Duration.zero);
 
+      // BLAnimatedLogo renders the tagline internally as a Positioned Text.
+      // It is present in the widget tree (even if opacity 0 at t=0).
       expect(
-        find.text('Tu mejor versión, un hábito a la vez.'),
+        find.text('HÁBITOS QUE TRANSFORMAN'),
         findsOneWidget,
       );
 

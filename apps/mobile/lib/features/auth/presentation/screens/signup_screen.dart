@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:better_life_app/app/router/route_names.dart';
 import 'package:better_life_app/core/error/failure.dart';
 import 'package:better_life_app/core/theme/bl_tokens.dart';
 import 'package:better_life_app/core/widgets/bl_back_button.dart';
@@ -17,8 +19,8 @@ import 'package:better_life_app/features/auth/presentation/state/auth_state.dart
 /// - `ConsumerStatefulWidget` to own TextEditingControllers.
 /// - Watches [signUpFormProvider] for form state and CTA enable logic.
 /// - Watches [authNotifierProvider] for loading / error feedback.
-/// - Dead links ("Términos", "Política de privacidad") → SnackBar "Pronto disponible".
-/// - Navigation to "/login" is not implemented here; S9 wires the router.
+/// - "Términos" and "Política de privacidad" → SnackBar "Pronto disponible".
+/// - "Inicia sesión" → [context.goNamed(RouteNames.login)].
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
@@ -285,7 +287,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => _showDeadLink(context),
+                      onTap: () => context.goNamed(RouteNames.login),
                       child: Text(
                         'Inicia sesión',
                         style: BLType.link.copyWith(

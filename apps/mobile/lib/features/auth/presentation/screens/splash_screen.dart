@@ -153,27 +153,15 @@ class _SplashCore extends StatelessWidget {
         const SizedBox(height: 100),
 
         // BLAnimatedLogo manages all animations internally (wordmark + tagline
-        // are rendered as Positioned children inside its own Stack).
-        // Do NOT add BLWordmark here — it would double-render.
+        // are rendered as Positioned children inside its own Stack with
+        // clipBehavior: Clip.none). The tagline sits at bottom: -82 inside
+        // the logo's own Stack and animates in via its own controller.
         const BLAnimatedLogo(size: 170),
 
-        // Tagline rendered outside the animated logo box for layout clearance.
-        // The animated logo already includes the tagline as a Positioned child,
-        // so we only show the static fallback tagline here for the non-animated
-        // presentation layer / tests.
+        // Vertical clearance for the tagline that overflows the logo box.
+        // BLAnimatedLogo uses Positioned(bottom: -82) — we provide 96px here
+        // so the overflow doesn't clip visually.
         const SizedBox(height: 96),
-
-        Text(
-          'Tu mejor versión, un hábito a la vez.',
-          style: TextStyle(
-            fontFamily: BLType.family,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: BLColors.lightText.withValues(alpha: 0.55),
-            letterSpacing: 0.01,
-          ),
-          textAlign: TextAlign.center,
-        ),
 
         const SizedBox(height: 100),
       ],

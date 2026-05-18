@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:better_life_app/app/router/route_names.dart';
 import 'package:better_life_app/core/error/failure.dart';
 import 'package:better_life_app/core/theme/bl_tokens.dart';
 import 'package:better_life_app/core/widgets/bl_back_button.dart';
@@ -15,8 +17,8 @@ import 'package:better_life_app/features/auth/presentation/state/auth_state.dart
 /// - `ConsumerStatefulWidget` to own TextEditingControllers.
 /// - Watches [loginFormProvider] for CTA enable state.
 /// - Watches [authNotifierProvider] for loading/error feedback.
-/// - Dead links ("¿Olvidaste tu contraseña?", "Regístrate") → SnackBar.
-/// - Navigation to "/register" is not implemented here; S9 wires the router.
+/// - "¿Olvidaste tu contraseña?" → SnackBar (not implemented yet).
+/// - "Regístrate" → [context.goNamed(RouteNames.register)].
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -222,7 +224,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => _showDeadLink(context),
+                      onTap: () => context.goNamed(RouteNames.register),
                       child: Text(
                         'Regístrate',
                         style: BLType.link.copyWith(
