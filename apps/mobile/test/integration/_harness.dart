@@ -136,13 +136,13 @@ class IntegrationHarness {
 
 // ── Pump helpers ──────────────────────────────────────────────────────────────
 
-/// Drains the deferred gate timer + the 2500ms splash floor.
+/// Drains the deferred bootstrap gate and any pending hard-timeout timer.
 ///
-/// Call after [tester.pumpWidget] to advance past the splash screen.
-/// Uses 6 seconds to comfortably clear the 2500ms minimum gate.
+/// Call after [tester.pumpWidget] to advance past the bootstrap-only splash.
+/// 6 seconds comfortably clears the 5-second hard timeout.
 Future<void> pumpPastSplash(WidgetTester tester) async {
   // Drain the Future<void>(_runGate) deferred scheduling.
   await tester.pump(Duration.zero);
-  // Drain the 2500ms floor + any remaining timer.
+  // Drain the bootstrap + any remaining hard-timeout timer.
   await tester.pump(const Duration(seconds: 6));
 }

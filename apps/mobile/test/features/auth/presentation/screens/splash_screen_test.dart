@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:better_life_app/core/widgets/bl_animated_logo.dart';
-import 'package:better_life_app/core/widgets/bl_loader_bar.dart';
+import 'package:better_life_app/core/theme/bl_tokens.dart';
 import 'package:better_life_app/features/auth/presentation/providers.dart';
 import 'package:better_life_app/features/auth/presentation/screens/splash_screen.dart';
 import 'package:better_life_app/features/auth/presentation/state/auth_notifier.dart';
@@ -14,7 +13,6 @@ import 'package:better_life_app/features/auth/domain/entities/auth_token.dart';
 
 // ── Fake notifiers ────────────────────────────────────────────────────────────
 
-/// A notifier whose bootstrap() completes immediately with a pre-set state.
 class _ImmediateAuthNotifier extends AuthNotifier {
   _ImmediateAuthNotifier(this._bootstrapState);
   final AuthState _bootstrapState;
@@ -33,7 +31,6 @@ class _ImmediateAuthNotifier extends AuthNotifier {
   }
 }
 
-/// A notifier whose bootstrap() never resolves (simulates slow storage).
 class _HangingAuthNotifier extends AuthNotifier {
   _HangingAuthNotifier();
 
@@ -42,7 +39,6 @@ class _HangingAuthNotifier extends AuthNotifier {
 
   @override
   Future<void> bootstrap() async {
-    // Never resolves — simulates Keystore hang.
     await Completer<void>().future;
   }
 
@@ -52,78 +48,46 @@ class _HangingAuthNotifier extends AuthNotifier {
   }
 }
 
-// ── Widget helper ─────────────────────────────────────────────────────────────
-
-/// Pumps SplashScreen inside a ProviderScope + MaterialApp.
 Widget _buildSplash(AuthNotifier Function() notifierFactory) {
   return ProviderScope(
     overrides: [
       authNotifierProvider.overrideWith(notifierFactory),
     ],
-    // Wrap in a MaterialApp that uses a Navigator so context.go* calls are safe.
-    child: const MaterialApp(
-      home: SplashScreen(),
-    ),
+    child: const MaterialApp(home: SplashScreen()),
   );
 }
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('SplashScreen — structure (after 2500ms gate completes)', () {
-    testWidgets('renders BLAnimatedLogo', (tester) async {
-      await tester.pumpWidget(
-        _buildSplash(() => _ImmediateAuthNotifier(const AuthUnauthenticated())),
-      );
-      // Pump 0ms: initial build
-      await tester.pump(Duration.zero);
-
-      expect(find.byType(BLAnimatedLogo), findsOneWidget);
-
-      // Drain all pending timers so the test ends cleanly.
-      await tester.pump(const Duration(seconds: 3));
-    });
-
-    testWidgets('renders BLLoaderBar', (tester) async {
-      await tester.pumpWidget(
-        _buildSplash(() => _ImmediateAuthNotifier(const AuthUnauthenticated())),
-      );
-      await tester.pump(Duration.zero);
-
-      expect(find.byType(BLLoaderBar), findsOneWidget);
-
-      await tester.pump(const Duration(seconds: 3));
-    });
-
-    testWidgets('has key bl_splash_root on root widget', (tester) async {
+  group('SplashScreen — structure', () {
+    testWidgets('renders a Scaffold with bl_splash_root key', (tester) async {
       await tester.pumpWidget(
         _buildSplash(() => _ImmediateAuthNotifier(const AuthUnauthenticated())),
       );
       await tester.pump(Duration.zero);
 
       expect(find.byKey(const Key('bl_splash_root')), findsOneWidget);
+      expect(find.byType(Scaffold), findsOneWidget);
 
-      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(seconds: 1));
     });
 
-    testWidgets('renders tagline text inside BLAnimatedLogo (exactly once)', (tester) async {
+    testWidgets('Scaffold background matches BLColors.lightBgTop',
+        (tester) async {
       await tester.pumpWidget(
         _buildSplash(() => _ImmediateAuthNotifier(const AuthUnauthenticated())),
       );
       await tester.pump(Duration.zero);
 
-      // BLAnimatedLogo renders the tagline internally as a Positioned Text.
-      // It is present in the widget tree (even if opacity 0 at t=0).
-      expect(
-        find.text('HÁBITOS QUE TRANSFORMAN'),
-        findsOneWidget,
-      );
+      final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
+      expect(scaffold.backgroundColor, BLColors.lightBgTop);
 
-      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(seconds: 1));
     });
   });
 
-  group('SplashScreen — bootstrap() called in initState', () {
+  group('SplashScreen — bootstrap()', () {
     testWidgets('calls bootstrap on the notifier', (tester) async {
       var bootstrapCalled = false;
 
@@ -140,88 +104,31 @@ void main() {
       );
       await tester.pump(Duration.zero);
 
-      // The override factory is called when the provider is first read.
-      // SplashScreen reads authNotifierProvider.notifier in initState.
       expect(bootstrapCalled, isTrue);
 
-      await tester.pump(const Duration(seconds: 3));
-    });
-  });
-
-  group('SplashScreen — 5s hard timeout (markUnauthenticated)', () {
-    testWidgets(
-        'calls markUnauthenticated after 5s when bootstrap hangs',
-        (tester) async {
-      await tester.pumpWidget(
-        _buildSplash(() => _HangingAuthNotifier()),
-      );
-      await tester.pump(Duration.zero); // initial build
-
-      // Advance past the 5-second hard timeout.
-      await tester.pump(const Duration(seconds: 5));
-
-      // The notifier should have been forced to AuthUnauthenticated.
-      final element = tester.element(find.byType(SplashScreen));
-      final container = ProviderScope.containerOf(element);
-      final authState = container.read(authNotifierProvider);
-
-      // After 5s timeout, state should be Unauthenticated (not AuthInitial).
-      expect(authState, isA<AuthUnauthenticated>());
-
-      // Drain remaining timers (floor completes after hanging bootstrap resolves).
-      // The hanging bootstrap never completes so Future.wait is still pending.
-      // We just make sure the test doesn't fail due to pending timers by
-      // allowing the test to complete — the timer was cancelled in dispose.
-    });
-  });
-
-  group('SplashScreen — gate minimum floor (2500ms)', () {
-    testWidgets(
-        'at 2499ms screen is still showing (gate not resolved)',
-        (tester) async {
-      await tester.pumpWidget(
-        _buildSplash(
-          () => _ImmediateAuthNotifier(const AuthUnauthenticated()),
-        ),
-      );
-      await tester.pump(Duration.zero);
-
-      // Pump 2499ms — gate should NOT have fired yet.
-      await tester.pump(const Duration(milliseconds: 2499));
-
-      // SplashScreen is still in the tree.
-      expect(find.byType(SplashScreen), findsOneWidget);
-
-      // Drain the remaining 1ms + extra to clean up.
       await tester.pump(const Duration(seconds: 1));
     });
   });
 
-  group('SplashScreen — gradient background', () {
-    testWidgets('contains a Container with RadialGradient decoration',
+  group('SplashScreen — 5s hard timeout (markUnauthenticated)', () {
+    testWidgets('forces Unauthenticated after 5s when bootstrap hangs',
         (tester) async {
       await tester.pumpWidget(
-        _buildSplash(() => _ImmediateAuthNotifier(const AuthUnauthenticated())),
+        _buildSplash(() => _HangingAuthNotifier()),
       );
       await tester.pump(Duration.zero);
+      await tester.pump(const Duration(seconds: 5));
 
-      final containers = tester.widgetList<Container>(find.byType(Container));
-      final hasGradient = containers.any((c) {
-        final dec = c.decoration;
-        if (dec is BoxDecoration) {
-          return dec.gradient is RadialGradient;
-        }
-        return false;
-      });
-      expect(hasGradient, isTrue);
+      final element = tester.element(find.byType(SplashScreen));
+      final container = ProviderScope.containerOf(element);
+      final authState = container.read(authNotifierProvider);
 
-      await tester.pump(const Duration(seconds: 3));
+      expect(authState, isA<AuthUnauthenticated>());
     });
   });
 
   group('SplashScreen — authenticated state navigation', () {
-    testWidgets(
-        'with AuthAuthenticated — SplashScreen is present initially',
+    testWidgets('with AuthAuthenticated — SplashScreen is present initially',
         (tester) async {
       final token = AuthToken(value: 'jwt-token');
       await tester.pumpWidget(
@@ -229,10 +136,9 @@ void main() {
       );
       await tester.pump(Duration.zero);
 
-      // At t=0, splash is still visible (gate not complete yet).
       expect(find.byType(SplashScreen), findsOneWidget);
 
-      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(seconds: 1));
     });
   });
 }
