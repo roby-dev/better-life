@@ -92,14 +92,13 @@ void main() {
       expect(find.text('Continuemos donde lo dejaste.'), findsOneWidget);
     });
 
-    testWidgets('renders BLBackButton and BLMiniLogo in top row', (tester) async {
+    testWidgets('does not render back button or mini logo (login is root)',
+        (tester) async {
       await tester.pumpWidget(_buildScreen(repo: _FakeRepo()));
       await tester.pump();
 
-      // Back button has chevron_left_rounded icon
-      expect(find.byIcon(Icons.chevron_left_rounded), findsOneWidget);
-      // Mini logo is an SvgPicture — verify the key
-      expect(find.byKey(const Key('login_mini_logo')), findsOneWidget);
+      expect(find.byIcon(Icons.chevron_left_rounded), findsNothing);
+      expect(find.byKey(const Key('login_mini_logo')), findsNothing);
     });
 
     testWidgets('renders email and password fields', (tester) async {

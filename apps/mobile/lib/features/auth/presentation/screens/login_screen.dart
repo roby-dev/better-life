@@ -5,8 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:better_life_app/app/router/route_names.dart';
 import 'package:better_life_app/core/error/failure.dart';
 import 'package:better_life_app/core/theme/bl_tokens.dart';
-import 'package:better_life_app/core/widgets/bl_back_button.dart';
-import 'package:better_life_app/core/widgets/bl_mini_logo.dart';
 import 'package:better_life_app/core/widgets/bl_primary_button.dart';
 import 'package:better_life_app/core/widgets/bl_text_field.dart';
 import 'package:better_life_app/features/auth/presentation/providers.dart';
@@ -105,16 +103,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Top row ──────────────────────────────────────────────────
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const BLBackButton(),
-                  BLMiniLogo(key: const Key('login_mini_logo')),
-                ],
-              ),
-              const SizedBox(height: 32),
-
               // ── Heading ──────────────────────────────────────────────────
               Text(
                 'Bienvenido de vuelta',

@@ -93,12 +93,12 @@ void main() {
       );
     });
 
-    testWidgets('renders BLBackButton and BLMiniLogo in top row', (tester) async {
+    testWidgets('renders back button only (no mini logo)', (tester) async {
       await tester.pumpWidget(_buildScreen(repo: _FakeRepo()));
       await tester.pump();
 
       expect(find.byIcon(Icons.chevron_left_rounded), findsOneWidget);
-      expect(find.byKey(const Key('signup_mini_logo')), findsOneWidget);
+      expect(find.byKey(const Key('signup_mini_logo')), findsNothing);
     });
 
     testWidgets('renders name, email and password fields', (tester) async {
@@ -385,6 +385,17 @@ void main() {
       await tester.pumpAndSettle();
 
       // After navigation, LoginScreen should be visible.
+      expect(find.byType(LoginScreen), findsOneWidget);
+      expect(find.byType(SignUpScreen), findsNothing);
+    });
+
+    testWidgets('tapping back button navigates to LoginScreen', (tester) async {
+      await tester.pumpWidget(buildScreenWithRouter(repo: _FakeRepo()));
+      await tester.pump();
+
+      await tester.tap(find.byIcon(Icons.chevron_left_rounded));
+      await tester.pumpAndSettle();
+
       expect(find.byType(LoginScreen), findsOneWidget);
       expect(find.byType(SignUpScreen), findsNothing);
     });

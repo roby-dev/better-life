@@ -6,7 +6,6 @@ import 'package:better_life_app/app/router/route_names.dart';
 import 'package:better_life_app/core/error/failure.dart';
 import 'package:better_life_app/core/theme/bl_tokens.dart';
 import 'package:better_life_app/core/widgets/bl_back_button.dart';
-import 'package:better_life_app/core/widgets/bl_mini_logo.dart';
 import 'package:better_life_app/core/widgets/bl_primary_button.dart';
 import 'package:better_life_app/core/widgets/bl_strength_meter.dart';
 import 'package:better_life_app/core/widgets/bl_text_field.dart';
@@ -114,12 +113,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── Top row ──────────────────────────────────────────────────
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const BLBackButton(),
-                  BLMiniLogo(key: const Key('signup_mini_logo')),
-                ],
+              Align(
+                alignment: Alignment.centerLeft,
+                child: BLBackButton(
+                  onPressed: () => context.goNamed(RouteNames.login),
+                ),
               ),
               const SizedBox(height: 32),
 
