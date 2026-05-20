@@ -26,6 +26,12 @@ public sealed class UpsertHabitCommandHandler : IRequestHandler<UpsertHabitComma
         var userId = _currentUser.UserId;
         var now = _clock.UtcNow;
 
+        var categoryBelongsToUser = await _db.Categories
+            .AnyAsync(c => c.Id == cmd.CategoryId && c.UserId == userId, ct);
+
+        if (!categoryBelongsToUser)
+            throw new NotFoundException("category-not-found", "La categoría no existe o no te pertenece.");
+
         var habit = await _db.Habits.IgnoreQueryFilters()
             .SingleOrDefaultAsync(h => h.Id == cmd.Id, ct);
 
