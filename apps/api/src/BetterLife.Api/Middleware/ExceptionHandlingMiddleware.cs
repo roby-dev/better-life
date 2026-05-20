@@ -61,6 +61,20 @@ public sealed class ExceptionHandlingMiddleware
 
             await ctx.Response.WriteAsync(JsonSerializer.Serialize(details));
         }
+        catch (NotFoundException ex)
+        {
+            ctx.Response.StatusCode = StatusCodes.Status404NotFound;
+            ctx.Response.ContentType = "application/problem+json";
+
+            var details = new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Title = ex.Message,
+                Type = $"https://betterlife.app/errors/{ex.ErrorType}"
+            };
+
+            await ctx.Response.WriteAsync(JsonSerializer.Serialize(details));
+        }
         catch (Exception ex)
         {
             Log.Error(ex, "Unhandled exception processing request {Method} {Path}",
