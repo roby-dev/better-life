@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:better_life_app/app/app.dart';
-import 'package:better_life_app/core/config/app_config.dart';
-import 'package:better_life_app/core/config/app_config_provider.dart';
+void main() {
+  runApp(const MainApp());
+}
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
-  runApp(
-    ProviderScope(
-      overrides: [
-        appConfigProvider.overrideWithValue(AppConfig.fromEnvironment()),
-      ],
-      child: const BetterLifeApp(),
-    ),
-  );
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Hello World!'),
+        ),
+      ),
+    );
+  }
 }
