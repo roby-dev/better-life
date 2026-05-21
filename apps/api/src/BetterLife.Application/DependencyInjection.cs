@@ -1,5 +1,7 @@
 using System.Reflection;
 using FluentValidation;
+using Mapster;
+using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using BetterLife.Application.Common.Behaviors;
@@ -14,6 +16,11 @@ public static class DependencyInjection
         s.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(asm));
         s.AddValidatorsFromAssembly(asm);
         s.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+        TypeAdapterConfig.GlobalSettings.Scan(asm);
+        s.AddSingleton(TypeAdapterConfig.GlobalSettings);
+        s.AddScoped<IMapper, ServiceMapper>();
+
         return s;
     }
 }
