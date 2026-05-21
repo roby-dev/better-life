@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:better_life_app/app/router/route_names.dart';
 import 'package:better_life_app/core/theme/bl_tokens.dart';
 import 'package:better_life_app/features/auth/presentation/providers.dart';
 
@@ -80,31 +82,49 @@ class _HabitsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       key: const Key('habits_tab'),
-      child: Padding(
-        padding: const EdgeInsets.all(BLSpacing.screenX),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Mis Hábitos',
-              style: BLType.h1.copyWith(color: BLColors.lightText),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              left: BLSpacing.screenX,
+              right: BLSpacing.screenX,
+              top: BLSpacing.screenTop,
             ),
-            const SizedBox(height: 8),
-            Text(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Mis Hábitos',
+                  style: BLType.h1.copyWith(color: BLColors.lightText),
+                ),
+                IconButton(
+                  onPressed: () => context.pushNamed(RouteNames.dashboard),
+                  icon: const Icon(Icons.dashboard_outlined),
+                  color: BLColors.lightIconIdle,
+                  tooltip: 'Dashboard',
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: BLSpacing.screenX),
+            child: Text(
               'Aquí aparecerán tus hábitos activos.',
               style: BLType.body.copyWith(color: BLColors.lightTextMuted),
             ),
-            const Spacer(),
-            Center(
-              child: Icon(
-                Icons.check_circle_outline,
-                size: 64,
-                color: BLColors.lavender300,
-              ),
+          ),
+          const Spacer(),
+          Center(
+            child: Icon(
+              Icons.check_circle_outline,
+              size: 64,
+              color: BLColors.lavender300,
             ),
-            const Spacer(),
-          ],
-        ),
+          ),
+          const Spacer(),
+        ],
       ),
     );
   }
