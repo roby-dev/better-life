@@ -9,6 +9,7 @@ import 'package:better_life_app/features/auth/presentation/screens/login_screen.
 import 'package:better_life_app/features/auth/presentation/screens/signup_screen.dart';
 import 'package:better_life_app/features/auth/presentation/screens/splash_screen.dart';
 import 'package:better_life_app/features/auth/presentation/state/auth_state.dart';
+import 'package:better_life_app/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:better_life_app/features/home/presentation/home_shell.dart';
 
 /// Riverpod provider for the app's [GoRouter].
@@ -61,6 +62,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RoutePaths.profile,
         name: RouteNames.profile,
         builder: (context, routeState) => const HomeShell(initialIndex: 2),
+      ),
+      GoRoute(
+        path: RoutePaths.dashboard,
+        name: RouteNames.dashboard,
+        builder: (context, routeState) => const DashboardScreen(),
       ),
     ],
   );
