@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>BetterLife — Splash</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+<style>
+  html, body, #root { height: 100%; margin: 0; }
+  body {
+    background: #EFEDF1;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── splash animations ─── */
+  @keyframes logoIn {
+    0%   { opacity: 0; transform: scale(0.6) translateY(20px); filter: blur(8px); }
+    60%  { opacity: 1; filter: blur(0); }
+    100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+  }
+  @keyframes checkDraw {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes wordmarkIn {
+    0%   { opacity: 0; transform: translateY(14px); letter-spacing: 0.02em; }
+    100% { opacity: 1; transform: translateY(0);   letter-spacing: -0.02em; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes loaderSlide {
+    0%   { transform: translateX(-110%); }
+    100% { transform: translateX(310%); }
+  }
+  @keyframes particleFloat {
+    0%   { transform: translate(0, 0) scale(1);   opacity: 0; }
+    20%  { opacity: 1; }
+    60%  { opacity: 0.8; }
+    100% { transform: translate(18px, -22px) scale(0.4); opacity: 0; }
+  }
+  @keyframes haloPulse {
+    0%   { transform: scale(0.6); opacity: 0.5; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  @keyframes dotPulse {
+    0%, 100% { transform: scale(1);   opacity: 0.18; }
+    50%      { transform: scale(1.6); opacity: 0.35; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="components/design-canvas.jsx"></script>
+<script type="text/babel" src="components/ios-frame.jsx"></script>
+<script type="text/babel" src="signup.jsx"></script>
+<script type="text/babel" src="login.jsx"></script>
+<script type="text/babel" src="splash.jsx"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.better_life_app.splash.SplashStageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/splash_stage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <!-- Decorative dots layer -->
+    <com.example.better_life_app.splash.DotsView
+        android:id="@+id/splash_dots"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Center column: halo + heart + wordmark + tagline -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Heart with halos and check stroke draw -->
+        <com.example.better_life_app.splash.HeartView
+            android:id="@+id/splash_heart"
+            android:layout_width="220dp"
+            android:layout_height="220dp" />
+
+        <android.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="28dp" />
+
+        <!-- Wordmark "BetterLife" — text is set programmatically with spans. -->
+        <TextView
+            android:id="@+id/splash_wordmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:letterSpacing="-0.02"
+            android:textColor="@color/bl_text"
+            android:fontFamily="sans-serif-black"
+            android:alpha="0"
+            android:translationY="14dp" />
+
+        <android.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <!-- Tagline "HÁBITOS · BIENESTAR · TÚ" -->
+        <TextView
+            android:id="@+id/splash_tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bl_splash_tagline"
+            android:textSize="10sp"
+            android:letterSpacing="0.32"
+            android:textColor="@color/bl_text_muted"
+            android:textAllCaps="true"
+            android:alpha="0" />
+    </LinearLayout>
+
+    <!-- Bottom loader bar -->
+    <com.example.better_life_app.splash.LoaderView
+        android:id="@+id/splash_loader"
+        android:layout_width="120dp"
+        android:layout_height="3dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="64dp" />
+
+</com.example.better_life_app.splash.SplashStageView>
