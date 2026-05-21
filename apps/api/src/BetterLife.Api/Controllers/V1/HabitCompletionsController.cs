@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using BetterLife.Application.HabitCompletions.Common;
 using BetterLife.Application.HabitCompletions.Delete;
+using BetterLife.Application.HabitCompletions.List;
 using BetterLife.Application.HabitCompletions.Upsert;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,17 @@ public sealed class HabitCompletionsController : ControllerBase
         var cmd = new UpsertCompletionCommand(req.Id, habitId, req.CompletionDate, req.Status);
         return Ok(await _mediator.Send(cmd, ct));
     }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(IReadOnlyList<HabitCompletionDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IReadOnlyList<HabitCompletionDto>>> ListCompletions(
+        Guid habitId,
+        [FromQuery] DateOnly? from,
+        [FromQuery] DateOnly? to,
+        CancellationToken ct)
+        => Ok(await _mediator.Send(new ListHabitCompletionsQuery(habitId, from, to), ct));
 
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
