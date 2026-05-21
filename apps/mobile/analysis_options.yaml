@@ -1,1 +1,6 @@
 include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    # Reference-only design handoff — not app code; do not analyze.
+    - design_handoff_auth_flow/**

@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>BetterLife — Splash</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#16151F" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#FAFAFB" media="(prefers-color-scheme: light)" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+
+<style>
+/* ───────────────────────────────────────────────────────────
+   BetterLife — Splash (self-contained HTML/CSS/JS)
+   - Auto light/dark via prefers-color-scheme
+   - Toggle in top-right to override (persists in localStorage)
+   - "Replay" button restarts the entry animation
+   ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* brand */
+  --lav-100: #C6C6F0;
+  --lav-200: #A7A7CC;
+  --lav-300: #8686A3;
+  --lav-400: #64647A;
+  --lav-500: #434352;
+
+  /* light defaults */
+  --bg-top:     #FFFFFF;
+  --bg-bottom:  #F4F2F8;
+  --text:       var(--lav-500);
+  --text-muted: rgba(67, 67, 82, 0.55);
+  --halo:       var(--lav-100);
+  --loader-track: rgba(67, 67, 82, 0.08);
+  --loader-fill:  var(--lav-300);
+  --logo-g1: #C6C6F0;
+  --logo-g2: #A7A7CC;
+  --logo-g3: #434352;
+  --logo-shadow-stop: rgba(67, 67, 82, 0.6);
+  --dot:        rgba(134, 134, 163, 0.18);
+  --dot-peak:   rgba(134, 134, 163, 0.35);
+}
+
+[data-theme="dark"] {
+  --bg-top:     #16151F;
+  --bg-bottom:  #0E0D16;
+  --bg-radial-center: #1F1E2C;
+  --text:       #E6E5F2;
+  --text-muted: rgba(232, 231, 245, 0.55);
+  --halo:       var(--lav-200);
+  --loader-track: rgba(198, 198, 240, 0.12);
+  --loader-fill:  var(--lav-100);
+  --logo-g1: #B8B8E8;
+  --logo-g2: #8B8BC0;
+  --logo-g3: #3A3A50;
+  --logo-shadow-stop: rgba(58, 58, 80, 0.7);
+  --dot:        rgba(167, 167, 204, 0.16);
+  --dot-peak:   rgba(167, 167, 204, 0.32);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* ─── Stage ─── */
+.splash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(env(safe-area-inset-top), 80px) 0
+           max(env(safe-area-inset-bottom), 80px);
+  background:
+    radial-gradient(120% 80% at 50% 20%,
+      var(--bg-top) 0%,
+      var(--bg-bottom) 100%);
+  overflow: hidden;
+}
+
+/* ─── Backdrop dots (decorative) ─── */
+.dots { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.dot {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--dot);
+  animation: dotPulse 3000ms ease-in-out infinite;
+}
+
+/* ─── Center stack ─── */
+.center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ─── Logo + halo ─── */
+.logo-wrap {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: grid;
+  place-items: center;
+}
+.halo {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1px solid var(--halo);
+  opacity: 0;
+  animation: haloPulse 4400ms ease-out infinite;
+}
+.halo:nth-child(2) { animation-delay: 1100ms; }
+.halo:nth-child(3) { animation-delay: 2200ms; }
+
+.logo {
+  width: 170px;
+  height: 170px;
+  overflow: visible;
+  animation: logoIn 1100ms cubic-bezier(.2,.9,.25,1) both;
+}
+.logo .check {
+  stroke-dasharray: 160;
+  stroke-dashoffset: 160;
+  animation: checkDraw 700ms cubic-bezier(.2,.7,.2,1) 400ms forwards;
+}
+.logo .particle {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: particleFloat 2400ms ease-in-out infinite;
+}
+
+/* ─── Wordmark + tagline ─── */
+.wordmark {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  animation: wordmarkIn 900ms cubic-bezier(.2,.9,.25,1) 350ms both;
+}
+.wordmark .life {
+  color: var(--lav-200);
+  font-weight: 500;
+}
+.tagline {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0;
+  animation: fadeIn 700ms ease 650ms forwards;
+}
+
+/* ─── Loader ─── */
+.loader {
+  position: relative;
+  width: 120px;
+  height: 3px;
+  border-radius: 100px;
+  background: var(--loader-track);
+  overflow: hidden;
+  z-index: 2;
+  opacity: 0;
+  animation: fadeIn 600ms ease 900ms forwards;
+}
+.loader::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background: var(--loader-fill);
+  border-radius: 100px;
+  animation: loaderSlide 1600ms cubic-bezier(.4,0,.2,1) 900ms infinite;
+}
+
+/* ─── UI chrome (dev convenience — remove in prod) ─── */
+.chrome {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+}
+.chrome button {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(67, 67, 82, 0.12);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(67, 67, 82, 0.08);
+  transition: transform 140ms ease;
+}
+[data-theme="dark"] .chrome button {
+  background: rgba(31, 30, 44, 0.7);
+  border-color: rgba(198, 198, 240, 0.18);
+  color: var(--text);
+}
+.chrome button:hover { transform: translateY(-1px); }
+
+/* ─── Keyframes ─── */
+@keyframes logoIn {
+  0%   { opacity: 0; transform: scale(0.6) translateY(20px); filter: blur(8px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+}
+@keyframes checkDraw { to { stroke-dashoffset: 0; } }
+@keyframes wordmarkIn {
+  0%   { opacity: 0; transform: translateY(14px); letter-spacing: 0.02em; }
+  100% { opacity: 1; transform: translateY(0);   letter-spacing: -0.02em; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes loaderSlide {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(310%); }
+}
+@keyframes particleFloat {
+  0%   { transform: translate(0, 0)      scale(1);   opacity: 0; }
+  20%  { opacity: 1; }
+  60%  { opacity: 0.8; }
+  100% { transform: translate(18px, -22px) scale(0.4); opacity: 0; }
+}
+@keyframes haloPulse {
+  0%   { transform: scale(0.6); opacity: 0.5; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1);   background: var(--dot); }
+  50%      { transform: scale(1.6); background: var(--dot-peak); }
+}
+
+/* Replay: when this class is set on the splash, restart all entry animations */
+.splash.replay .logo,
+.splash.replay .logo .check,
+.splash.replay .wordmark,
+.splash.replay .tagline,
+.splash.replay .loader { animation: none; }
+</style>
+</head>
+
+<body>
+  <!-- Dev chrome (remove in production) -->
+  <div class="chrome">
+    <button id="replay">↻ Replay</button>
+    <button id="theme">◐ Theme</button>
+  </div>
+
+  <main class="splash" id="splash">
+    <!-- Decorative dots in the background -->
+    <div class="dots" id="dots"></div>
+
+    <!-- spacer for top safe area -->
+    <div></div>
+
+    <!-- Center: halo + logo + wordmark + tagline -->
+    <div class="center">
+      <div class="logo-wrap">
+        <div class="halo"></div>
+        <div class="halo"></div>
+        <div class="halo"></div>
+
+        <svg class="logo" viewBox="0 0 200 200" aria-label="BetterLife">
+          <defs>
+            <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="var(--logo-g1)" />
+              <stop offset="45%"  stop-color="var(--logo-g2)" />
+              <stop offset="100%" stop-color="var(--logo-g3)" />
+            </linearGradient>
+            <linearGradient id="heartShadow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="var(--logo-g2)" stop-opacity="0" />
+              <stop offset="100%" stop-color="var(--logo-shadow-stop)" />
+            </linearGradient>
+            <linearGradient id="bandLight" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#fff" stop-opacity="0" />
+              <stop offset="50%"  stop-color="#fff" stop-opacity="0.85" />
+              <stop offset="100%" stop-color="#fff" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+
+          <!-- heart base -->
+          <path d="M100 178 C 70 158, 30 130, 22 92 C 16 62, 38 36, 68 36 C 84 36, 95 44, 100 56 C 105 44, 116 36, 132 36 C 162 36, 184 62, 178 92 C 170 130, 130 158, 100 178 Z"
+                fill="url(#heartGrad)" />
+
+          <!-- right-lobe shadow -->
+          <path d="M100 56 C 105 44, 116 36, 132 36 C 162 36, 184 62, 178 92 C 170 130, 130 158, 100 178 Z"
+                fill="url(#heartShadow)" opacity="0.55" />
+
+          <!-- subtle inner band -->
+          <path d="M30 96 C 70 88, 130 88, 172 96"
+                stroke="url(#bandLight)" stroke-width="6" fill="none" opacity="0.6" />
+
+          <!-- check mark (animated stroke draw) -->
+          <path class="check"
+                d="M62 100 L 90 126 L 140 70"
+                stroke="#FFFFFF" stroke-width="14"
+                stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+          <!-- particle trail -->
+          <circle class="particle" cx="152" cy="52" r="6"   fill="var(--logo-g1)" style="animation-delay: 600ms;"  />
+          <circle class="particle" cx="164" cy="44" r="4"   fill="var(--logo-g1)" style="animation-delay: 680ms;"  />
+          <circle class="particle" cx="172" cy="38" r="3"   fill="var(--logo-g1)" style="animation-delay: 760ms;"  />
+          <circle class="particle" cx="178" cy="32" r="2.2" fill="var(--logo-g1)" style="animation-delay: 840ms;"  />
+          <circle class="particle" cx="184" cy="26" r="1.6" fill="var(--logo-g1)" style="animation-delay: 920ms;"  />
+          <circle class="particle" cx="158" cy="30" r="2"   fill="var(--logo-g1)" style="animation-delay: 980ms;"  />
+          <circle class="particle" cx="170" cy="22" r="1.4" fill="var(--logo-g1)" style="animation-delay: 1040ms;" />
+        </svg>
+      </div>
+
+      <div class="wordmark"><span class="better">Better</span><span class="life">Life</span></div>
+      <div class="tagline">Hábitos · Bienestar · Tú</div>
+    </div>
+
+    <!-- Loader -->
+    <div class="loader" aria-hidden="true"></div>
+  </main>
+
+  <script>
+  /* ─── Backdrop dots ─── */
+  (function placeDots() {
+    const positions = [
+      [12,14,2], [88,22,3], [22,64,1.5], [78,78,2], [14,84,2.5],
+      [60, 8,1.2], [92,56,1.8], [ 8,38,1.4], [36,92,1.6], [70,90,1.2],
+    ];
+    const host = document.getElementById('dots');
+    positions.forEach(([x, y, s], i) => {
+      const d = document.createElement('div');
+      d.className = 'dot';
+      d.style.left = x + '%';
+      d.style.top = y + '%';
+      d.style.width = (s * 2) + 'px';
+      d.style.height = (s * 2) + 'px';
+      d.style.animationDelay = (i * 180) + 'ms';
+      d.style.animationDuration = (3000 + i * 250) + 'ms';
+      host.appendChild(d);
+    });
+  })();
+
+  /* ─── Theme: respect system, allow override (persists) ─── */
+  const root = document.documentElement;
+  const KEY = 'betterlife.theme';
+
+  function applyTheme(t) {
+    if (t === 'light' || t === 'dark') {
+      root.setAttribute('data-theme', t);
+    } else {
+      root.removeAttribute('data-theme'); // auto = system
+    }
+  }
+
+  // Initial: stored override > system
+  const stored = localStorage.getItem(KEY);
+  if (stored) applyTheme(stored);
+  else {
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+    applyTheme(mql.matches ? 'dark' : 'light');
+    mql.addEventListener('change', e => {
+      if (!localStorage.getItem(KEY)) applyTheme(e.matches ? 'dark' : 'light');
+    });
+  }
+
+  document.getElementById('theme').addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem(KEY, next);
+  });
+
+  /* ─── Replay: re-trigger entry animations by re-flowing the DOM ─── */
+  document.getElementById('replay').addEventListener('click', () => {
+    const splash = document.getElementById('splash');
+    splash.classList.add('replay');
+    // force reflow so the animation:none takes effect, then restore
+    void splash.offsetWidth;
+    splash.classList.remove('replay');
+  });
+
+  /* ─── Hook for app integration ─────────────────────────────────
+     When ready to navigate away from splash, call:
+        window.BetterLifeSplash.done = () => { /* navigate * / };
+     The minimum hold is 2500ms (so the animation finishes); after that,
+     done() fires immediately once the page is "ready".
+     ────────────────────────────────────────────────────────────── */
+  window.BetterLifeSplash = { ready: false, done: null };
+  setTimeout(() => {
+    window.BetterLifeSplash.ready = true;
+    if (typeof window.BetterLifeSplash.done === 'function') {
+      window.BetterLifeSplash.done();
+    }
+  }, 2500);
+  </script>
+</body>
+</html>
