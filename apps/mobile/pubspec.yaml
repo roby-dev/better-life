@@ -10,10 +10,51 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # HTTP
+  dio: ^5.7.0
+
+  # Secure storage
+  flutter_secure_storage: ^9.2.2
+
+  # Router
+  go_router: ^14.6.2
+
+  # Timezone detection
+  flutter_timezone: ^4.1.1
+
+  # SVG rendering
+  flutter_svg: ^2.0.10+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  mocktail: ^1.0.4
+  http_mock_adapter: ^0.6.1
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/betterlife_logo.svg
+    - assets/fonts/
+
+  fonts:
+    # TODO(font-bundle): drop .ttf files before app build
+    # Download from: https://fonts.google.com/specimen/Plus+Jakarta+Sans
+    # Required weights: Regular (400), Medium (500), SemiBold (600), Bold (700), ExtraBold (800)
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/PlusJakartaSans-ExtraBold.ttf
+          weight: 800
