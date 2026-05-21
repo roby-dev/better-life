@@ -15,16 +15,4 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
-
-    <!-- Native splash theme — radial gradient background owns the screen.
-         The window background is the same top-color so the system-drawn
-         frames before SplashView attaches are invisible. -->
-    <style name="BLSplashTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
-        <item name="android:windowBackground">@color/bl_bg_top</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/bl_bg_bottom</item>
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
 </resources>

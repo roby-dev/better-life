@@ -32,9 +32,6 @@ public static class DependencyInjection
         services.AddSingleton<IDefaultCategoryProvider, DefaultCategoryProvider>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-        services.AddHttpContextAccessor();
-        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
-
         return services;
     }
 }

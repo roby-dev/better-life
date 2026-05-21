@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using BetterLife.Application.Common.Abstractions;
 using BetterLife.Domain.Categories;
-using BetterLife.Domain.Habits;
 using BetterLife.Domain.Users;
 
 namespace BetterLife.Infrastructure.Persistence;
@@ -12,8 +11,6 @@ public sealed class AppDbContext : DbContext, IAppDbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Category> Categories => Set<Category>();
-    public DbSet<Habit> Habits => Set<Habit>();
-    public DbSet<HabitCompletion> HabitCompletions => Set<HabitCompletion>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

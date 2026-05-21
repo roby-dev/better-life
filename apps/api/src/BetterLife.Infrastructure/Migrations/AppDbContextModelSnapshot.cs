@@ -62,90 +62,6 @@ namespace BetterLife.Infrastructure.Migrations
                     b.ToTable("Categories", (string)null);
                 });
 
-            modelBuilder.Entity("BetterLife.Domain.Habits.Habit", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FrequencyType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<TimeOnly?>("ReminderTime")
-                        .HasColumnType("time");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("WeekDays")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("IX_Habits_UserId");
-
-                    b.ToTable("Habits", (string)null);
-                });
-
-            modelBuilder.Entity("BetterLife.Domain.Habits.HabitCompletion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateOnly>("CompletionDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("HabitId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("SyncedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HabitId");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("IX_HabitCompletions_UserId");
-
-                    b.HasIndex("UserId", "HabitId", "CompletionDate")
-                        .IsUnique()
-                        .HasDatabaseName("UX_HabitCompletions_UserId_HabitId_Date");
-
-                    b.ToTable("HabitCompletions", (string)null);
-                });
-
             modelBuilder.Entity("BetterLife.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -195,30 +111,6 @@ namespace BetterLife.Infrastructure.Migrations
                     b.HasOne("BetterLife.Domain.Users.User", null)
                         .WithMany("Categories")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BetterLife.Domain.Habits.Habit", b =>
-                {
-                    b.HasOne("BetterLife.Domain.Categories.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("BetterLife.Domain.Users.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BetterLife.Domain.Habits.HabitCompletion", b =>
-                {
-                    b.HasOne("BetterLife.Domain.Habits.Habit", null)
-                        .WithMany()
-                        .HasForeignKey("HabitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
