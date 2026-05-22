@@ -13,8 +13,8 @@ void main() {
   late DioAuthRemoteDataSource sut;
 
   const baseUrl = 'http://localhost';
-  const loginPath = '/api/auth/login';
-  const registerPath = '/api/auth/register';
+  const loginPath = '/api/v1/auth/login';
+  const registerPath = '/api/v1/auth/register';
   const accessToken = 'eyJhbGciOiJIUzI1NiJ9.test';
 
   setUp(() {
@@ -29,12 +29,12 @@ void main() {
     test('returns AuthResponseDto on 200', () async {
       adapter.onPost(
         loginPath,
-        (server) => server.reply(200, {'accessToken': accessToken}),
+        (server) => server.reply(200, {'token': accessToken}),
         data: dto.toJson(),
       );
 
       final result = await sut.login(dto);
-      expect(result.accessToken, accessToken);
+      expect(result.token, accessToken);
     });
 
     test('throws DioException on 401 (so ErrorInterceptor can wrap it)', () async {
@@ -81,12 +81,12 @@ void main() {
     test('returns AuthResponseDto on 201', () async {
       adapter.onPost(
         registerPath,
-        (server) => server.reply(201, {'accessToken': accessToken}),
+        (server) => server.reply(201, {'token': accessToken}),
         data: dto.toJson(),
       );
 
       final result = await sut.register(dto);
-      expect(result.accessToken, accessToken);
+      expect(result.token, accessToken);
     });
 
     test('throws DioException on 400 ValidationProblemDetails', () async {

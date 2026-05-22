@@ -1,6 +1,6 @@
 /// S12 — Flow 3: Login failure (401) → inline error, router stays on /login
 ///
-/// Mocks a 401 from /api/auth/login. Fills credentials, taps CTA, and asserts
+/// Mocks a 401 from /api/v1/auth/login. Fills credentials, taps CTA, and asserts
 /// the AuthFailure title surfaces as an inline error. Router stays on /login.
 library;
 

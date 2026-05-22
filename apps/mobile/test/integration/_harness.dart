@@ -73,13 +73,13 @@ class FakeAuthRemoteDataSource implements AuthRemoteDataSource {
   @override
   Future<AuthResponseDto> login(LoginRequestDto dto) async {
     if (_loginFailure != null) throw _loginFailure!;
-    return AuthResponseDto(accessToken: _accessToken);
+    return AuthResponseDto(token: _accessToken);
   }
 
   @override
   Future<AuthResponseDto> register(RegisterRequestDto dto) async {
     if (_registerFailure != null) throw _registerFailure!;
-    return AuthResponseDto(accessToken: _accessToken);
+    return AuthResponseDto(token: _accessToken);
   }
 }
 

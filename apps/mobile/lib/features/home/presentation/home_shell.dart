@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import 'package:better_life_app/app/router/route_names.dart';
 import 'package:better_life_app/core/theme/bl_tokens.dart';
 import 'package:better_life_app/features/auth/presentation/providers.dart';
+import 'package:better_life_app/features/habits/presentation/screens/habits_list_screen.dart';
 
 /// HomeShell — the root scaffold for authenticated screens.
 ///
@@ -43,7 +42,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         key: const Key('home_shell_stack'),
         index: _index,
         children: const [
-          _HabitsTab(),
+          HabitsListScreen(),
           _GoalsTab(),
           _ProfileTab(),
         ],
@@ -73,62 +72,6 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 }
 
 // ── Tab bodies ────────────────────────────────────────────────────────────────
-
-/// Habits tab — placeholder content.
-class _HabitsTab extends StatelessWidget {
-  const _HabitsTab();
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      key: const Key('habits_tab'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              left: BLSpacing.screenX,
-              right: BLSpacing.screenX,
-              top: BLSpacing.screenTop,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Mis Hábitos',
-                  style: BLType.h1.copyWith(color: BLColors.lightText),
-                ),
-                IconButton(
-                  onPressed: () => context.pushNamed(RouteNames.dashboard),
-                  icon: const Icon(Icons.dashboard_outlined),
-                  color: BLColors.lightIconIdle,
-                  tooltip: 'Dashboard',
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: BLSpacing.screenX),
-            child: Text(
-              'Aquí aparecerán tus hábitos activos.',
-              style: BLType.body.copyWith(color: BLColors.lightTextMuted),
-            ),
-          ),
-          const Spacer(),
-          Center(
-            child: Icon(
-              Icons.check_circle_outline,
-              size: 64,
-              color: BLColors.lavender300,
-            ),
-          ),
-          const Spacer(),
-        ],
-      ),
-    );
-  }
-}
 
 /// Goals tab — placeholder content.
 class _GoalsTab extends StatelessWidget {

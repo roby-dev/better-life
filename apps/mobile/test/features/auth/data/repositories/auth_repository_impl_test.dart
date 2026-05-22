@@ -20,7 +20,7 @@ void main() {
 
   const rawToken = 'eyJhbGciOiJIUzI1NiJ9.payload';
   const authToken = AuthToken(value: rawToken);
-  final authResponseDto = AuthResponseDto(accessToken: rawToken);
+  final authResponseDto = AuthResponseDto(token: rawToken);
 
   setUp(() {
     remote = MockAuthRemoteDataSource();
@@ -64,7 +64,7 @@ void main() {
         () async {
       const failure = AuthFailure(title: 'Credenciales inválidas', statusCode: 401);
       final dioEx = DioException(
-        requestOptions: RequestOptions(path: '/api/auth/login'),
+        requestOptions: RequestOptions(path: '/api/v1/auth/login'),
         error: failure,
       );
       when(() => remote.login(any())).thenThrow(dioEx);
@@ -84,7 +84,7 @@ void main() {
         },
       );
       final dioEx = DioException(
-        requestOptions: RequestOptions(path: '/api/auth/login'),
+        requestOptions: RequestOptions(path: '/api/v1/auth/login'),
         error: failure,
       );
       when(() => remote.login(any())).thenThrow(dioEx);
@@ -98,7 +98,7 @@ void main() {
     test('wraps bare DioException without Failure.error as UnknownFailure',
         () async {
       final dioEx = DioException(
-        requestOptions: RequestOptions(path: '/api/auth/login'),
+        requestOptions: RequestOptions(path: '/api/v1/auth/login'),
         // error is null — no Failure set (e.g. connection error before interceptor runs)
       );
       when(() => remote.login(any())).thenThrow(dioEx);
@@ -111,7 +111,7 @@ void main() {
 
     test('does not persist token on failure', () async {
       final dioEx = DioException(
-        requestOptions: RequestOptions(path: '/api/auth/login'),
+        requestOptions: RequestOptions(path: '/api/v1/auth/login'),
         error: const AuthFailure(title: 'Bad', statusCode: 401),
       );
       when(() => remote.login(any())).thenThrow(dioEx);
@@ -165,7 +165,7 @@ void main() {
         errors: {'Email': ['already exists']},
       );
       final dioEx = DioException(
-        requestOptions: RequestOptions(path: '/api/auth/register'),
+        requestOptions: RequestOptions(path: '/api/v1/auth/register'),
         error: failure,
       );
       when(() => remote.register(any())).thenThrow(dioEx);
@@ -181,7 +181,7 @@ void main() {
       const failure =
           AuthFailure(title: 'Email ya registrado', statusCode: 409);
       final dioEx = DioException(
-        requestOptions: RequestOptions(path: '/api/auth/register'),
+        requestOptions: RequestOptions(path: '/api/v1/auth/register'),
         error: failure,
       );
       when(() => remote.register(any())).thenThrow(dioEx);

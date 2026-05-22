@@ -10,6 +10,7 @@ abstract class RouteNames {
   static const habits    = 'home-habits';
   static const goals     = 'home-goals';
   static const profile   = 'home-profile';
+  static const habitForm = 'habit-form';
 }
 
 abstract class RoutePaths {
@@ -20,4 +21,5 @@ abstract class RoutePaths {
   static const habits    = '/home/habits';
   static const goals     = '/home/goals';
   static const profile   = '/home/profile';
+  static const habitForm = '/home/habits/form';
 }

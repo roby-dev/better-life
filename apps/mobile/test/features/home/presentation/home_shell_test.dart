@@ -9,6 +9,9 @@ import 'package:better_life_app/features/auth/domain/entities/auth_token.dart';
 import 'package:better_life_app/features/auth/presentation/providers.dart';
 import 'package:better_life_app/features/auth/presentation/state/auth_notifier.dart';
 import 'package:better_life_app/features/auth/presentation/state/auth_state.dart';
+import 'package:better_life_app/features/habits/presentation/providers.dart';
+import 'package:better_life_app/features/habits/presentation/state/habits_notifier.dart';
+import 'package:better_life_app/features/habits/presentation/state/habits_state.dart';
 import 'package:better_life_app/features/home/presentation/home_shell.dart';
 
 // ---------------------------------------------------------------------------
@@ -56,6 +59,18 @@ class _FakeAuthNotifier extends AuthNotifier {
   }
 }
 
+class _FakeHabitsNotifier extends HabitsNotifier {
+  @override
+  HabitsState build() => const HabitsLoaded([]);
+
+  @override
+  Future<void> load() async {}
+  @override
+  Future<void> retry() async {}
+  @override
+  Future<void> delete(String id) async {}
+}
+
 Widget _buildShell({
   required _FakeRepo repo,
   int initialIndex = 0,
@@ -69,6 +84,7 @@ Widget _buildShell({
       authNotifierProvider.overrideWith(
         () => _FakeAuthNotifier(initialState),
       ),
+      habitsNotifierProvider.overrideWith(() => _FakeHabitsNotifier()),
     ],
     child: MaterialApp(
       home: HomeShell(initialIndex: initialIndex),

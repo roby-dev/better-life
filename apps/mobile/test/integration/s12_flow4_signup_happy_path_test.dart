@@ -1,7 +1,7 @@
 /// S12 — Flow 4: SignUp happy path → /home/habits
 ///
 /// Navigates from Login footer "Regístrate" to SignUp. Fills name/email/password
-/// with valid data, mocks a 201 from /api/auth/register, taps CTA, and asserts
+/// with valid data, mocks a 201 from /api/v1/auth/register, taps CTA, and asserts
 /// HomeShell Habits tab is visible.
 library;
 

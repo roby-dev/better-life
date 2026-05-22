@@ -17,8 +17,8 @@ abstract class AuthRemoteDataSource {
 
 /// Dio-backed implementation of [AuthRemoteDataSource].
 class DioAuthRemoteDataSource implements AuthRemoteDataSource {
-  static const _loginPath = '/api/auth/login';
-  static const _registerPath = '/api/auth/register';
+  static const _loginPath = '/api/v1/auth/login';
+  static const _registerPath = '/api/v1/auth/register';
 
   final Dio _dio;
 

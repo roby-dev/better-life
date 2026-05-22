@@ -9,6 +9,9 @@ import 'package:better_life_app/features/auth/presentation/providers.dart';
 import 'package:better_life_app/features/auth/presentation/state/auth_notifier.dart';
 import 'package:better_life_app/features/auth/presentation/state/auth_state.dart';
 import 'package:better_life_app/features/auth/domain/entities/auth_token.dart';
+import 'package:better_life_app/features/habits/presentation/providers.dart';
+import 'package:better_life_app/features/habits/presentation/state/habits_notifier.dart';
+import 'package:better_life_app/features/habits/presentation/state/habits_state.dart';
 
 // ── Minimal fake notifier helpers ────────────────────────────────────────────
 
@@ -28,6 +31,18 @@ class _FakeAuthNotifier extends AuthNotifier {
   }
 }
 
+class _FakeHabitsNotifier extends HabitsNotifier {
+  @override
+  HabitsState build() => const HabitsLoaded([]);
+
+  @override
+  Future<void> load() async {}
+  @override
+  Future<void> retry() async {}
+  @override
+  Future<void> delete(String id) async {}
+}
+
 // Helper: pump a MaterialApp.router backed by an overridden authNotifierProvider
 // and return the router.
 Future<GoRouter> _pumpRouter(
@@ -36,11 +51,12 @@ Future<GoRouter> _pumpRouter(
 ) async {
   late GoRouter router;
 
-  await tester.pumpWidget(
-    ProviderScope(
-      overrides: [
-        authNotifierProvider.overrideWith(() => _FakeAuthNotifier(initial)),
-      ],
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            authNotifierProvider.overrideWith(() => _FakeAuthNotifier(initial)),
+            habitsNotifierProvider.overrideWith(() => _FakeHabitsNotifier()),
+          ],
       child: Builder(
         builder: (context) {
           final container = ProviderScope.containerOf(context);
@@ -81,6 +97,7 @@ void main() {
         overrides: [
           authNotifierProvider
               .overrideWith(() => _FakeAuthNotifier(const AuthUnauthenticated())),
+          habitsNotifierProvider.overrideWith(() => _FakeHabitsNotifier()),
         ],
       );
       addTearDown(container.dispose);
@@ -117,6 +134,7 @@ void main() {
         overrides: [
           authNotifierProvider.overrideWith(
               () => _FakeAuthNotifier(AuthAuthenticated(token))),
+          habitsNotifierProvider.overrideWith(() => _FakeHabitsNotifier()),
         ],
       );
       addTearDown(container.dispose);
@@ -148,6 +166,7 @@ void main() {
         overrides: [
           authNotifierProvider.overrideWith(
               () => _FakeAuthNotifier(AuthAuthenticated(token))),
+          habitsNotifierProvider.overrideWith(() => _FakeHabitsNotifier()),
         ],
       );
       addTearDown(container.dispose);
@@ -182,6 +201,7 @@ void main() {
         overrides: [
           authNotifierProvider.overrideWith(
               () => _FakeAuthNotifier(const AuthUnauthenticated())),
+          habitsNotifierProvider.overrideWith(() => _FakeHabitsNotifier()),
         ],
       );
       addTearDown(container.dispose);
@@ -214,6 +234,7 @@ void main() {
         overrides: [
           authNotifierProvider.overrideWith(
               () => _FakeAuthNotifier(const AuthInitial())),
+          habitsNotifierProvider.overrideWith(() => _FakeHabitsNotifier()),
         ],
       );
       addTearDown(container.dispose);

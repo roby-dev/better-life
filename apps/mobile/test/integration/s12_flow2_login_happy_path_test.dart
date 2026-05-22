@@ -1,6 +1,6 @@
 /// S12 — Flow 2: Login happy path → /home/habits
 ///
-/// Mocks a 200 from /api/auth/login. Fills email + password on the
+/// Mocks a 200 from /api/v1/auth/login. Fills email + password on the
 /// Login screen, taps CTA, and asserts the HomeShell Habits tab is visible.
 library;
 

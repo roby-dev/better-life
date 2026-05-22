@@ -48,13 +48,13 @@ void main() {
   });
 
   group('AuthResponseDto', () {
-    test('fromJson parses accessToken', () {
-      final dto = AuthResponseDto.fromJson({'accessToken': 'eyJhbGciOi...'});
-      expect(dto.accessToken, 'eyJhbGciOi...');
+    test('fromJson parses token', () {
+      final dto = AuthResponseDto.fromJson({'token': 'eyJhbGciOi...'});
+      expect(dto.token, 'eyJhbGciOi...');
     });
 
     test('toEntity converts to AuthToken', () {
-      final dto = AuthResponseDto.fromJson({'accessToken': 'tok123'});
+      final dto = AuthResponseDto.fromJson({'token': 'tok123'});
       final token = dto.toEntity();
       expect(token.value, 'tok123');
     });

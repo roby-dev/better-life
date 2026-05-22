@@ -1,4 +1,4 @@
-/// DTO for POST /api/auth/login.
+/// DTO for POST /api/v1/auth/login.
 ///
 /// Pure Dart — no Flutter imports. No codegen.
 class LoginRequestDto {

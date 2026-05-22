@@ -1,4 +1,4 @@
-/// DTO for POST /api/auth/register.
+/// DTO for POST /api/v1/auth/register.
 ///
 /// Pure Dart — no Flutter imports. No codegen.
 class RegisterRequestDto {
